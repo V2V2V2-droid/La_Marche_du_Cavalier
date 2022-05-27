@@ -1,10 +1,8 @@
-# Sujet: Trouver un graphe hamiltonien pour un cavalier voulant passer par toutes les cases
-# d'un échiquer sans jamais repasser par une déjà visitée
+# Topic: Find an hamitonian graph for a knight on a chest board who needs to pass by all the cases without passing twice by any of them. 
 import numpy as np
 import random
 import math
-from itertools import chain
-
+from itertools import chai
 
 # list of vectors representing the possible moves of the knight.
 # the use of tuple instead of np array has been made for convenience in the construction of dependable objects
@@ -169,8 +167,7 @@ class Game(Chess):
 
     def make_ur_move(self):
         """
-        Iteration function **** recursion issue ****** instead of using list to store the Mi, I would like to calculate them directly
-        no interest in storing Mi..
+        Iteration function..
         :return:  position_sequence list to which one new pi is appended after each iteration
         """
         for i in range(0, self.u):
