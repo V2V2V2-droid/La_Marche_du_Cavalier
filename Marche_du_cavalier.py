@@ -2,7 +2,7 @@
 import numpy as np
 import random
 import math
-from itertools import chai
+from itertools import chain
 
 # list of vectors representing the possible moves of the knight.
 # the use of tuple instead of np array has been made for convenience in the construction of dependable objects
@@ -47,7 +47,6 @@ class Chess:
     -the M0 adjacent matrix: a matrix of size : n x n showing 1 if there exists a possible path between
     two cases and 0 otherwise. By raising M0 to the power k: we obtain the number of possible paths of length k
     between two cases.
-
     Rk: we look at a square board but other forms can be considered
     Rk: colors are not looked at as we are interested in the knight move. The same code for the bishop or queen should
     take this into account
@@ -84,26 +83,21 @@ class Game(Chess):
     def __init__(self, p0, u=64):
         """
         The Game object is a series of u moves of a knight from a position p0. It inherits from the Chess class
-
         From the adjacent matrix M0, inherited from Chess, after each move from case pi, we define the Mi matrix
         by setting the i column and line to 0 (the knight does not have the right to go back to a case previously
         visited so the path is "condemned".
         ie with knight leaving the position pi: Mi+1 = Mi, with line i and column i = 0
         -> M64 will be the null matrix.
-
         From M0, we calculate N0 = M0^(64) raised to the power 64 : with coordinate (m,l) which counts the nb of
         possible paths of length 64 between case m and case l.
         Ni = Mi(64) at each iteration.
-
         From p0: initial position, we make a sequence of moves pi that we store in a list.
-
         Among the list of accessible cases, the choice of the next one follows the algorithms defined below:
         algo 1: we maximise the number of accessible cases
             (so make a count on the lines or columns of the Mi matrix and choose the highest for pi+1)
         algo 2: we maximise the nb of paths of length 64
             (so we take the max cell of matrix Ni among accessible cases and take the corresponding pi+1
         algo 3: same as algo 2 but minimizing the nb of path
-
         :param p0: Initial position on the board (case number): type int
         :param u: Number of moves in the game, type int
         """
@@ -125,17 +119,20 @@ class Game(Chess):
         else:
             M_ = self.M(i - 1)
             potential_next_p = [r for r, m in enumerate(M_[self.position_sequence[i-1]]) if m == 1]
-            print("Potential next positions after case: {}".format(str(self.position_sequence[i-1])))
-            print(potential_next_p)
+            # print("Potential next positions after case: {}".format(str(self.position_sequence[i-1]))) # print statement unactivated because pretty heavy in the final loop: but one can look at one sequence precise construction with this  
+            # print(potential_next_p)
+
+            # Formula for algo 3: converges
+            N_min = {k: int(self.N(i - 1)[k][k]) for k in potential_next_p}
+            p_ = min(N_min, key=N_min.get)  
+
+             # I list here the two other algorithm that were tested and do not converge: 
+
             # Formula for Algo 1: does not converge : brings us to 25-30 moves
             # M_counts = {k: int(self.M(i-1)[k].sum()) for k in potential_next_p if int(self.M(i-1)[k].sum()) !=0 }
             # Formula for algo 2: does not converge, brings us to about 40 moves
             # N_max = {k:int(self.N(i-1)[k][k]) for k in potential_next_p}
-            # Formula for algo 3: converges
-            N_min = {k: int(self.N(i - 1)[k][k]) for k in potential_next_p}
-            print("N_min for i = {}".format(str(i)))
-            print(N_min)
-            p_ = min(N_min, key=N_min.get)  # N_min converges but why?
+            
 
             return p_
 
@@ -187,11 +184,13 @@ if __name__ == '__main__':
 
     my_N = 64
     all_starting_positions = list(range(0, my_N))
-    print(all_starting_positions)
+  
     f = open("marche_du_cavalier.txt", "w+")
 
     for i in all_starting_positions:
         one_game = Game(p0=i)
         seq = one_game.make_ur_move()
+        print("Sequence strating at position {} :".format(str(i)))
+        print(seq)
         f.write("Position {}: ({})\n".format(i, '-'.join([str(j) for j in seq])))
     f.close()
