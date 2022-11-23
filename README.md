@@ -10,3 +10,5 @@ You can test and vary the board size (given that you stay on a square board) (**
 
 The technique used to solve the algorithm is one using "adjacent matrices" and their different power (k) meaning matrices computing the nb of paths of lenght k between two points.    
 The algorithm that has proven sucessful is one that minimizes the number of potential paths. Please feel free to exchange on the  mathematical justification behind the convergence (which, unformally, is translated by "giving privilege to the cases that are hardest to get to"). 
+
+![image](https://user-images.githubusercontent.com/74412016/203449933-d9b88ac9-3ee3-476d-9a7b-96dba8d7d069.png)
